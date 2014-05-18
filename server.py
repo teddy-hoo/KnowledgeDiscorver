@@ -14,8 +14,11 @@ class Handler(BaseHTTPRequestHandler):
 		if self.path == '/':
 			self.path = '/index.html'
 		self.path = self.path[1:]
-		sendfile = open(self.path)
-		print sendfile
+		try:
+			sendfile = open(self.path)
+		except:
+			print "file not found"
+			return
 		if self.path.endswith(".html"):
 			contentType = 'text/html'
 		elif self.path.endswith('.css'):

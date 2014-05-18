@@ -18,11 +18,9 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
                   corpus=corpora[corpus], smoothing=smoothing,
                   case_insensitive=caseInsensitive)
     result = requests.get("http://books.google.com", params = params)
-    print result.text
-    #res = re.findall('var data = (.*?);\\n', req.text)
-    #data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
-    #print data
-    return result.url, params['content'], result.text
+    rawdata = result.text.encode('utf-8')
+    print rawdata
+    return result.url, params['content'], rawdata
 
 
 def runQuery(argumentString):
@@ -38,6 +36,7 @@ def runQuery(argumentString):
     toSave, toPrint, toPlot = True, True, False
 
     url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
+    return df
         # if not allData:
         #     if caseInsensitive is True:
         #         for col in df.columns:

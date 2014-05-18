@@ -30,11 +30,8 @@
           var data = {
             "words": words
           };
-          $.ajax({
-            type: 'post',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json'
+          $.post("", JSON.stringify(data), function(ngramdata){
+            alert(ngramdata);
           });
           $("#wordlist").empty();
           for(var i = 0; i < words.length; ++i){
