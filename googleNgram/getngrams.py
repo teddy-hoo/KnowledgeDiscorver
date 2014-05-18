@@ -14,31 +14,19 @@ corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
 
 
 def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
-    # params = dict(content=query, year_start=startYear, year_end=endYear,
-    #               corpus=corpora[corpus], smoothing=smoothing,
-    #               case_insensitive=caseInsensitive)
-    params = dict(content=query, year_start=1800, year_end=2008,
-                  corpus=17, smoothing=3,
-                  case_insensitive=False)
-    # if params['case_insensitive'] is False:
-    #     params.pop('case_insensitive')
-    # if '?' in params['content']:
-    #     params['content'] = params['content'].replace('?', '*')
-    # if '@' in params['content']:
-    #     params['content'] = params['content'].replace('@', '=>')
+    params = dict(content=query, year_start=startYear, year_end=endYear,
+                  corpus=corpora[corpus], smoothing=smoothing,
+                  case_insensitive=caseInsensitive)
     result = requests.get("http://books.google.com", params = params)
-    print params
     print result.text
-    return result.text
-    # res = re.findall('var data = (.*?);\\n', req.text)
-    # data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
-    # df = DataFrame(data)
-    # df.insert(0, 'year', range(startYear, endYear+1))
-    # return req.url, params['content'], df
+    #res = re.findall('var data = (.*?);\\n', req.text)
+    #data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
+    #print data
+    return result.url, params['content'], result.text
 
 
 def runQuery(argumentString):
-    arguments = argumentString.split()
+    arguments = argumentString.split(',')
     query = ' '.join([arg for arg in arguments if not arg.startswith('-')])
     if '?' in query:
         query = query.replace('?', '*')
@@ -49,50 +37,7 @@ def runQuery(argumentString):
     printHelp, caseInsensitive, allData = False, False, False
     toSave, toPrint, toPlot = True, True, False
 
-    # parsing the query parameters
-    for param in params:
-        if '-nosave' in param:
-            toSave = False
-        elif '-noprint' in param:
-            toPrint = False
-        elif '-plot' in param:
-            toPlot = True
-        elif '-corpus' in param:
-            corpus = param.split('=')[1].strip()
-        elif '-startYear' in param:
-            startYear = int(param.split('=')[1])
-        elif '-endYear' in param:
-            endYear = int(param.split('=')[1])
-        elif '-smoothing' in param:
-            smoothing = int(param.split('=')[1])
-        elif '-caseInsensitive' in param:
-            caseInsensitive = True
-        elif '-alldata' in param:
-            allData = True
-        elif '-help' in param:
-            printHelp = True
-        else:
-            print 'Did not recognize the following argument: %s' % param
-    if printHelp:
-        print 'See README file.'
-    else:
-        if '*' in query and caseInsensitive is True:
-            caseInsensitive = False
-            notifyUser = True
-            warningMessage = "*NOTE: Wildcard and case-insensitive " + \
-                             "searches can't be combined, so the " + \
-                             "case-insensitive option was ignored."
-        elif '_INF' in query and caseInsensitive is True:
-            caseInsensitive = False
-            notifyUser = True
-            warningMessage = "*NOTE: Inflected form and case-insensitive " + \
-                             "searches can't be combined, so the " + \
-                             "case-insensitive option was ignored."
-        else:
-            notifyUser = False
-        # url, urlquery, df = getNgrams(query, corpus, startYear, endYear,
-        #                               smoothing, caseInsensitive)
-        return getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
+    url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
         # if not allData:
         #     if caseInsensitive is True:
         #         for col in df.columns:
@@ -156,7 +101,7 @@ if __name__ == '__main__':
     if argumentString == '':
         argumentString = raw_input('Enter query (or -help):')
     else:
-        try:
-            runQuery(argumentString)
-        except:
-            print 'An error occurred.'
+        # try:
+        runQuery(argumentString)
+        # except:
+            # print 'An error occurred.'
