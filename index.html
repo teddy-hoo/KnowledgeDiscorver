@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="libs/jquery/jquery-1.11.1.min.js"></script>
+
+    <title>Knowledge Discover</title>
+    <script>
+      var wordtagcss = [
+        'label label-primary',
+        'label label-success',
+        'label label-info',
+        'label label-warning',
+        'label label-danger'
+        ];
+      $(document).ready(function(){
+        $("#inputbutton").click(function(){
+          var word = $("#wordinput").val();
+          if(word == ""){
+            return;
+          }
+          var words = word.split(',');
+          var data = {
+            "words": words
+          };
+          $.ajax({
+            type: 'post',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json'
+          });
+          $("#wordlist").empty();
+          for(var i = 0; i < words.length; ++i){
+            $newol = $('<ol />');
+            $newol.attr({
+              "class": "breadcrumb"
+            });
+            $newli = $('<li />');
+            $newspan = $('<span />');
+            $newspan.attr({
+              "class": wordtagcss[parseInt(Math.random() * 5)]
+            });
+            $newspan.text(words[i]);
+            $newli.append($newspan);
+            $newol.append($newli);
+            $("#wordlist").append($newol);                        
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Knowledge Discover</h3>
+      </div>
+
+      <div class="jumbotron">
+        <p class="lead">Input whatever words you want to Know!</p>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <input id="wordinput" type="text" class="form-control">
+              <span class="input-group-btn">
+                <button id="inputbutton" class="btn btn-default" type="button">Go!</button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+        <p>
+          <div id="wordlist">
+            </ol>
+          </div>
+        </p>    
+      </div>
+      <div class="footer">
+        <p>&copy; Company 2014</p>
+      </div>
+
+    </div>
+  </body>
+</html>
