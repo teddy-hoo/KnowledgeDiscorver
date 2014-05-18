@@ -34,11 +34,11 @@
             alert(ngramdata);
           });
           $("#wordlist").empty();
-          for(var i = 0; i < words.length; ++i){
-            $newol = $('<ol />');
+          $newol = $('<ol />');
             $newol.attr({
               "class": "breadcrumb"
             });
+          for(var i = 0; i < words.length; ++i){            
             $newli = $('<li />');
             $newspan = $('<span />');
             $newspan.attr({
