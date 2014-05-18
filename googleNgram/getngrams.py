@@ -19,11 +19,11 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
                   case_insensitive=caseInsensitive)
     result = requests.get("http://books.google.com", params = params)
     rawdata = result.text.encode('utf-8')
-    print rawdata
     return result.url, params['content'], rawdata
 
 
 def runQuery(argumentString):
+    argumentString = argumentString.encode('utf-8')
     arguments = argumentString.split(',')
     query = ' '.join([arg for arg in arguments if not arg.startswith('-')])
     if '?' in query:
