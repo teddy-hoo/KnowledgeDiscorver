@@ -21,7 +21,7 @@
         'label label-danger'
         ];
       $(document).ready(function(){
-        $("#inputbutton").click(function(){
+        var action = function(){
           var word = $("#wordinput").val();
           if(word == ""){
             return;
@@ -48,6 +48,13 @@
             $newli.append($newspan);
             $newol.append($newli);
             $("#wordlist").append($newol);                        
+          }
+        };
+        $("#inputbutton").click(action);
+        $("#wordinput").keydown(function(event){
+          if(event.which == 13){
+            event.preventDefault();
+            action();
           }
         });
       });
