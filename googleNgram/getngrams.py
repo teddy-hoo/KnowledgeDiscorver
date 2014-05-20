@@ -19,8 +19,8 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
                   case_insensitive=caseInsensitive)
     result = requests.get("http://books.google.com/ngrams/graph?", params = params)
     rawdata = result.text.encode('utf-8')
-    data = re.findall('var data = (.*?);\\n', rawdata)
-    return result.url, params['content'], data
+    data = re.findall('var data = ([.*?]);\\n', rawdata)
+    return result.url, params['content'], data[0]
 
 
 def runQuery(argumentString):
@@ -32,7 +32,7 @@ def runQuery(argumentString):
     if '@' in query:
         query = query.replace('@', '=>')
     params = [arg for arg in arguments if arg.startswith('-')]
-    corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2000, 3
+    corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2008, 3
     printHelp, caseInsensitive, allData = False, False, False
     toSave, toPrint, toPlot = True, True, False
 

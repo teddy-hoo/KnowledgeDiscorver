@@ -10,8 +10,28 @@
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
     <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="libs/jquery/jquery-1.11.1.min.js"></script>
+    <script src="libs/d3/d3.min.js"></script>
+    <script src="draw/draw.js"></script>
 
     <title>Knowledge Discover</title>
+    <style>
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .x.axis path {
+        display: none;
+      }
+
+      .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+      }
+    </style>
     <script>
       var wordtagcss = [
         'label label-primary',
@@ -31,7 +51,19 @@
             "words": words
           };
           $.post("", JSON.stringify(data), function(ngramdata){
-            alert(ngramdata);
+            var wordsdata = JSON.parse(ngramdata);
+            var dataforrender = [];
+            var wordcount = wordsdata.length;
+            var timelength = wordsdata[0].timeseries.length;
+            for(var i = 0; i < timelength; ++i){
+              var subdata = {};
+              for(var j = 0; j < wordcount; ++j){
+                subdata[wordsdata[j].ngram] = wordsdata[j].timeseries[i];
+              }
+              subdata["time"] = (18000000 + 10000 * i).toString();
+              dataforrender.push(subdata);
+            }
+            draw(dataforrender);
           });
           $("#wordlist").empty();
           $newol = $('<ol />');
