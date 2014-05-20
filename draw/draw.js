@@ -35,11 +35,17 @@ var draw = function(data) {
 			return y(d.temperature);
 		});
 
-	var svg = d3.select("body").append("svg")
+	if(d3.select("#chart")[0][0]){
+		svg = d3.select("#chart");
+	}
+	else{
+		var svg = d3.select("#canvas").append("svg")
+		.attr("id", "chart")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	}
 
 	color.domain(d3.keys(data[0]).filter(function(key) {
 		return key !== "time";
