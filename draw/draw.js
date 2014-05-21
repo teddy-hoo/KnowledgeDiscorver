@@ -145,3 +145,37 @@ Draw.prototype.render = function(){
 			return d.name;
 		});
 };
+
+Draw.prototype.change = function(){
+	this._prepareData();
+	var city = this.svg.selectAll(".city")
+		.data(this.cities)
+
+	city.enter().append("g")
+		.attr("class", "city")
+		.append("path")
+		.attr("class", "line")
+		.attr("d", function(d) {
+			return that.line(d.values);
+		})
+		.style("stroke", function(d) {
+			return that.color(d.name);
+		});
+
+	// city.append("text")
+	// 	.datum(function(d) {
+	// 		return {
+	// 			name: d.name,
+	// 			value: d.values[d.values.length - 1]
+	// 		};
+	// 	})
+	// 	.attr("transform", function(d) {
+	// 		return "translate(" + that.x(d.value.time) + "," + that.y(d.value.temperature) + ")";
+	// 	})
+	// 	.attr("x", 3)
+	// 	.attr("dy", ".35em")
+	// 	.text(function(d) {
+	// 		return d.name;
+	// 	});
+	city.exit().remove();
+};

@@ -66,9 +66,13 @@
             }
             if(plot === null){
               plot = new Draw();
+              plot.setData(dataforrender);
+              plot.render();
             }            
-            plot.setData(dataforrender);
-            plot.render();
+            else{
+              plot.setData(dataforrender);
+              plot.change();
+            }
           });
           $("#wordlist").empty();
           $newol = $('<ol />');
