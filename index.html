@@ -40,6 +40,7 @@
         'label label-warning',
         'label label-danger'
         ];
+      var plot = null;
       $(document).ready(function(){
         var action = function(){
           var word = $("#wordinput").val();
@@ -63,7 +64,11 @@
               subdata["time"] = (18000000 + 10000 * i).toString();
               dataforrender.push(subdata);
             }
-            draw(dataforrender);
+            if(plot === null){
+              plot = new Draw();
+            }            
+            plot.setData(dataforrender);
+            plot.render();
           });
           $("#wordlist").empty();
           $newol = $('<ol />');

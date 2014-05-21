@@ -1,64 +1,75 @@
-var draw = function(data) {
-	var margin = {
+var Draw = function(){
+	var that = this;
+	this.data = null;
+	this.margin = {
 		top: 20,
 		right: 80,
 		bottom: 30,
 		left: 50
 	},
-		width = 960 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom;
+	this.width = 960 - this.margin.left - this.margin.right,
+	this.height = 500 - this.margin.top - this.margin.bottom;
 
-	var parseDate = d3.time.format("%Y%m%d").parse;
+	this.parseDate = d3.time.format("%Y%m%d").parse;
 
-	var x = d3.time.scale()
-		.range([0, width]);
+	this.x = d3.time.scale()
+		.range([0, this.width]);
 
-	var y = d3.scale.linear()
-		.range([height, 0]);
+	this.y = d3.scale.linear()
+		.range([this.height, 0]);
 
-	var color = d3.scale.category10();
+	this.color = d3.scale.category10();
 
-	var xAxis = d3.svg.axis()
-		.scale(x)
+	this.xAxis = d3.svg.axis()
+		.scale(this.x)
 		.orient("bottom");
 
-	var yAxis = d3.svg.axis()
-		.scale(y)
+	this.yAxis = d3.svg.axis()
+		.scale(this.y)
 		.orient("left");
 
-	var line = d3.svg.line()
+	this.line = d3.svg.line()
 		.interpolate("basis")
 		.x(function(d) {
-			return x(d.time);
+			return that.x(d.time);
 		})
 		.y(function(d) {
-			return y(d.temperature);
+			return that.y(d.temperature);
 		});
+	this.svg = null;
+	this.cities = [];
+};
 
-	if(d3.select("#chart")[0][0]){
-		svg = d3.select("#chart");
-	}
-	else{
-		var svg = d3.select("#canvas").append("svg")
+Draw.prototype.setData = function(data){
+	this.data = data;
+};
+
+Draw.prototype._createSVG = function(){
+	if(this.svg === null){
+		this.svg = d3.select("#canvas").append("svg")
 		.attr("id", "chart")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
+		.attr("width", this.width + this.margin.left + this.margin.right)
+		.attr("height", this.height + this.margin.top + this.margin.bottom)
 		.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 	}
+};
 
-	color.domain(d3.keys(data[0]).filter(function(key) {
+Draw.prototype._prepareData = function(){
+	var that = this;
+
+	this.color.domain(d3.keys(this.data[0]).filter(function(key) {
 		return key !== "time";
 	}));
 
-	data.forEach(function(d) {
-		d.time = parseDate(d.time);
+	this.data.forEach(function(d) {
+		d.time = that.parseDate(d.time);
 	});
 
-	var cities = color.domain().map(function(name) {
+	this.cities = this.color.domain().map(function(name) {
 		return {
 			name: name,
-			values: data.map(function(d) {
+			values: that.data.map(function(d) {
 				return {
 					time: d.time,
 					temperature: +d[name]
@@ -67,31 +78,36 @@ var draw = function(data) {
 		};
 	});
 
-	x.domain(d3.extent(data, function(d) {
+	this.x.domain(d3.extent(this.data, function(d) {
 		return d.time;
 	}));
 
-	y.domain([
-		d3.min(cities, function(c) {
+	this.y.domain([
+		d3.min(this.cities, function(c) {
 			return d3.min(c.values, function(v) {
 				return v.temperature;
 			});
 		}),
-		d3.max(cities, function(c) {
+		d3.max(this.cities, function(c) {
 			return d3.max(c.values, function(v) {
 				return v.temperature;
 			});
 		})
 	]);
+};
 
-	svg.append("g")
+Draw.prototype.render = function(){
+	var that = this;
+	this._createSVG();
+	this._prepareData();
+	this.svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis);
+		.attr("transform", "translate(0," + this.height + ")")
+		.call(this.xAxis);
 
-	svg.append("g")
+	this.svg.append("g")
 		.attr("class", "y axis")
-		.call(yAxis)
+		.call(this.yAxis)
 		.append("text")
 		.attr("transform", "rotate(-90)")
 		.attr("y", 6)
@@ -99,18 +115,18 @@ var draw = function(data) {
 		.style("text-anchor", "end")
 		.text("Temperature (ºF)");
 
-	var city = svg.selectAll(".city")
-		.data(cities)
+	var city = this.svg.selectAll(".city")
+		.data(this.cities)
 		.enter().append("g")
 		.attr("class", "city");
 
 	city.append("path")
 		.attr("class", "line")
 		.attr("d", function(d) {
-			return line(d.values);
+			return that.line(d.values);
 		})
 		.style("stroke", function(d) {
-			return color(d.name);
+			return that.color(d.name);
 		});
 
 	city.append("text")
@@ -121,12 +137,11 @@ var draw = function(data) {
 			};
 		})
 		.attr("transform", function(d) {
-			return "translate(" + x(d.value.time) + "," + y(d.value.temperature) + ")";
+			return "translate(" + that.x(d.value.time) + "," + that.y(d.value.temperature) + ")";
 		})
 		.attr("x", 3)
 		.attr("dy", ".35em")
 		.text(function(d) {
 			return d.name;
 		});
-
-}
+};
