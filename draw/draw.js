@@ -150,9 +150,12 @@ Draw.prototype.change = function(){
 	this._prepareData();
 	var city = this.svg.selectAll(".city")
 		.data(this.cities)
+		.attr("class", "city")
+		.attr("d", function(d) {
+			return that.line(d.values);
+		});
 
 	city.enter().append("g")
-		.attr("class", "city")
 		.append("path")
 		.attr("class", "line")
 		.attr("d", function(d) {
