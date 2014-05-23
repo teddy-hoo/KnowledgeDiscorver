@@ -130,6 +130,7 @@ Draw.prototype.render = function(){
 		});
 
 	city.append("text")
+		.attr("class", "tag")
 		.datum(function(d) {
 			return {
 				name: d.name,
@@ -149,7 +150,6 @@ Draw.prototype.render = function(){
 Draw.prototype.change = function(){
 	that = this;
 	this._prepareData();
-
 	this.svg.selectAll(".city").remove();
 
 	var city = this.svg.selectAll(".city")
@@ -167,6 +167,7 @@ Draw.prototype.change = function(){
 		});
 
 	city.append("text")
+		.attr("class", "tag")
 		.datum(function(d) {
 			return {
 				name: d.name,
@@ -181,39 +182,4 @@ Draw.prototype.change = function(){
 		.text(function(d) {
 			return d.name;
 		});
-
-	// var city = this.svg.selectAll(".city")
-	// 	.data(this.cities)
-	// 	.enter().append("g")
-	// 	.attr("class", "city").append("path")
-	// 	.attr("d", function(d) {
-	// 		return that.line(d.values);
-	// 	});
-
-	// // city.append("path")
-	// 	// .transition().duration(500)
-	// 	// .attr("class", "line")
-	// 	// .attr("d", function(d) {
-	// 	// 	return that.line(d.values);
-	// 	// });
-	// 	// .style("stroke", function(d) {
-	// 	// 	return that.color(d.name);
-	// 	// });
-
-	// city.append("text")
-	// 	.datum(function(d) {
-	// 		return {
-	// 			name: d.name,
-	// 			value: d.values[d.values.length - 1]
-	// 		};
-	// 	})
-	// 	.attr("transform", function(d) {
-	// 		return "translate(" + that.x(d.value.time) + "," + that.y(d.value.temperature) + ")";
-	// 	})
-	// 	.attr("x", 3)
-	// 	.attr("dy", ".35em")
-	// 	.text(function(d) {
-	// 		return d.name;
-	// 	});
-	// city.exit().remove();
 };
