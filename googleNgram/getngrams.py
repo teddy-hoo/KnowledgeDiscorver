@@ -15,8 +15,7 @@ corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
 
 def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
     params = dict(content=query, year_start=startYear, year_end=endYear,
-                  corpus=corpora[corpus], smoothing=smoothing,
-                  case_insensitive=caseInsensitive)
+                  corpus=corpora[corpus], smoothing=smoothing)
     result = requests.get("http://books.google.com/ngrams/graph?", params = params)
     rawdata = result.text.encode('utf-8')
     data = re.findall('var data = (.*?);\\n', rawdata)
