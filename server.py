@@ -33,7 +33,7 @@ class Handler(BaseHTTPRequestHandler):
 		length = self.headers['content-length']
 		jsondata = self.rfile.read(int(length))
 		data = json.loads(jsondata)
-		content = runQuery(data["words"][0])
+		content = runQuery(data["words"])
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
