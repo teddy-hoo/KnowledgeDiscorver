@@ -1,2 +1,5 @@
 Python 2.7.6
 requests module
+
+run server.py
+type in 127.0.0.1:8000 in your browser

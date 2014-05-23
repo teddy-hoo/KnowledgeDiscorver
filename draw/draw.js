@@ -7,8 +7,8 @@ var Draw = function(){
 		bottom: 30,
 		left: 50
 	},
-	this.width = 960 - this.margin.left - this.margin.right,
-	this.height = 500 - this.margin.top - this.margin.bottom;
+	this.width = 800 - this.margin.left - this.margin.right,
+	this.height = 400 - this.margin.top - this.margin.bottom;
 	this.parseDate = d3.time.format("%Y%m%d").parse;
 	this.svg = null;
 	this.cities = [];
@@ -96,6 +96,17 @@ Draw.prototype._prepareData = function(){
 Draw.prototype.render = function(){
 	var that = this;
 	this._createSVG();
+	this._line();
+};
+
+Draw.prototype.update = function(){
+	that = this;
+	this.svg.selectAll("g").remove();
+	this._line();
+};
+
+Draw.prototype._line = function(){
+	that = this;
 	this._prepareData();
 	this.svg.append("g")
 		.attr("class", "x axis")
@@ -112,18 +123,6 @@ Draw.prototype.render = function(){
 		.style("text-anchor", "end")
 		.text("Word Frequency");
 
-	this._line();
-};
-
-Draw.prototype.update = function(){
-	that = this;
-	this._prepareData();
-	this.svg.selectAll(".city").remove();
-	this._line();
-};
-
-Draw.prototype._line = function(){
-	that = this;
 	var city = this.svg.selectAll(".city")
 		.data(this.cities)
 		.enter().append("g")
