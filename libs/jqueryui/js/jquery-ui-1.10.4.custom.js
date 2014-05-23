@@ -12407,7 +12407,7 @@ $.widget( "ui.tooltip", {
 		items: "[title]:not([disabled])",
 		position: {
 			my: "left top+15",
-			at: "left bottom",
+			at: "left top-40",
 			collision: "flipfit flip"
 		},
 		show: true,

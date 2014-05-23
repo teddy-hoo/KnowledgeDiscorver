@@ -9,12 +9,24 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
     <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="libs/jqueryui/css/bootstrap.min.css" rel="stylesheet">
     <script src="libs/jquery/jquery-1.11.1.min.js"></script>
     <script src="libs/d3/d3.min.js"></script>
+    <script src="libs/jqueryui/js/jquery-ui-1.10.4.custom.js"></script>
     <script src="draw/draw.js"></script>
 
     <title>Knowledge Discover</title>
     <style>
+      .ui-tooltip {
+        color:rgb(255,105,180);
+        background-color: transparent;
+        padding: 6px;
+        position: absolute;
+        z-index: 9999;
+        max-width: 300px;
+        -webkit-box-shadow: 0 0 5px #aaa;
+        box-shadow: 0 0 12px #aaa;
+      }
       .axis path,
       .axis line {
         fill: none;
@@ -45,6 +57,8 @@
         var action = function(){
           var word = $("#wordinput").val();
           if(word == ""){
+            $("#canvas").hide();
+            $("#wordlist").hide();
             return;
           }
           var words = word.split(',');
@@ -73,6 +87,8 @@
               plot.setData(dataforrender);
               plot.change();
             }
+            $("#canvas").hide();
+            $("#canvas").show("clip");
           });
           $("#wordlist").empty();
           $newol = $('<ol />');
@@ -88,9 +104,13 @@
             $newspan.text(words[i]);
             $newli.append($newspan);
             $newol.append($newli);
-            $("#wordlist").append($newol);                        
+            $("#wordlist").append($newol); 
+            $("#wordlist").hide();
+            $("#wordlist").show("clip");
           }
         };
+        $(document).tooltip();
+        $("#wordlist").hide();
         $("#wordinput").focus();
         $("#inputbutton").click(action);
         $("#wordinput").keydown(function(event){
@@ -115,7 +135,7 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="input-group">
-              <input id="wordinput" type="text" class="form-control">
+              <input id="wordinput" type="text" class="form-control" title="Type in the words, mutilple use ',' split.">
               <span class="input-group-btn">
                 <button id="inputbutton" class="btn btn-default" type="button">Go!</button>
               </span>
