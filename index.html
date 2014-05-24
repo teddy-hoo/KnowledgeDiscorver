@@ -12,16 +12,18 @@
     <script src="libs/jquery/jquery-1.11.1.min.js"></script>
     <script src="libs/d3/d3.min.js"></script>
     <script src="libs/jqueryui/js/jquery-ui-1.10.4.custom.js"></script>
+    <script src="libs/bootstrap/js/bootstrap.js"></script>
     <script src="draw/draw.js"></script>
+    <script src="libs/shadowbox/shadowbox.js"></script>
 
     <title>Knowledge Discover</title>
     <style>
       .ui-tooltip {
-        color:rgb(255,20,147);
+        color: rgb(255,20,147);
         background-color: transparent;
         padding: 6px;
         position: absolute;
-        z-index: 9999;
+        z-index: 100;
         max-width: 300px;
         -webkit-box-shadow: 0 0 5px #aaa;
         box-shadow: 0 0 12px #aaa;
@@ -45,6 +47,15 @@
 
       .tag {
       }
+
+      .shadowbox {
+        position: absolute;
+        background-color: #b0c4de;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        opacity: 0.3;
+      }
     </style>
     <script>
       var wordtagcss = [
@@ -55,12 +66,21 @@
         'label label-danger'
         ];
       var plot = null;
+      var shadowbox = null;
       $(document).ready(function(){
         var action = function(){
+          var btn = $("#inputbutton");
+          btn.button("loading");
+          if(shadowbox === null){
+            shadowbox = new ShadowBox("content");
+          }
+          shadowbox.add();
           var word = $("#wordinput").val();
           if(word == ""){
             $("#canvas").hide("clip");
             $("#wordlist").hide("clip");
+            btn.button("reset");
+            shadowbox.remove();
             return;
           }
           var words = word.split(',');
@@ -68,6 +88,8 @@
             "words": words
           };
           $.post("", JSON.stringify(data), function(ngramdata){
+            shadowbox.remove();
+            btn.button("reset");
             var wordsdata = JSON.parse(ngramdata);
             var dataforrender = [];
             var wordcount = wordsdata.length;
@@ -113,6 +135,9 @@
         };
         $(document).tooltip();
         $(window).resize(function(){
+          if(shadowbox){
+            shadowbox.resize();
+          }
           if(plot && plot.resize){
             $("#canvas").attr("width", $("#container").width() - 200);
             plot.resize({
@@ -126,7 +151,9 @@
 
         $("#wordinput").focus();
 
-        $("#inputbutton").click(action);
+        $("#inputbutton").click(function(){                   
+          action();
+        });
         $("#wordinput").keydown(function(event){
           if(event.which == 13){
             event.preventDefault();
@@ -149,7 +176,7 @@
             <div class="input-group">
               <input id="wordinput" type="text" class="form-control" title="Type in the words, mutilple use ',' split.">
               <span class="input-group-btn">
-                <button id="inputbutton" class="btn btn-default" type="button">Go!</button>
+                <button id="inputbutton" class="btn btn-default" data-loading-text="Loading..." type="button">Search</button>
               </span>
             </div><!-- /input-group -->
           </div><!-- /.col-lg-6 -->
