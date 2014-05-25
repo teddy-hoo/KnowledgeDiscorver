@@ -50,11 +50,17 @@
 
       .shadowbox {
         position: absolute;
-        background-color: #b0c4de;
+        background-color: #A0A0A0;
         top: 0;
         left: 0;
         z-index: 1000;
-        opacity: 0.3;
+        opacity: 0.8;
+        box-shadow: 10px 10px 5px #888888;
+        text-align: center;
+        line-height: 300px;
+        font-family: "Times New Roman";
+        font-size: 50px;
+        font-color: #FFFF00;
       }
     </style>
     <script>
@@ -72,7 +78,7 @@
           var btn = $("#inputbutton");
           btn.button("loading");
           if(shadowbox === null){
-            shadowbox = new ShadowBox("content");
+            shadowbox = new ShadowBox("wait for 5 seconds");
           }
           shadowbox.add();
           var word = $("#wordinput").val();
@@ -88,6 +94,7 @@
             "words": words
           };
           $.post("", JSON.stringify(data), function(ngramdata){
+            shadowbox.stopCount();
             shadowbox.remove();
             btn.button("reset");
             var wordsdata = JSON.parse(ngramdata);
@@ -113,6 +120,8 @@
             }
             $("#canvas").hide();
             $("#canvas").show("clip");
+            $("#wordlist").hide();
+            $("#wordlist").show("clip");
           });
           $("#wordlist").empty();
           $newol = $('<ol />');
@@ -129,8 +138,6 @@
             $newli.append($newspan);
             $newol.append($newli);
             $("#wordlist").append($newol); 
-            $("#wordlist").hide();
-            $("#wordlist").show("clip");
           }
         };
         $(document).tooltip();
