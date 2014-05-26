@@ -29,12 +29,13 @@ ShadowBox.prototype._startCount = function(){
 	that = this;
 	countTime = this.waittime;
 	this.countInterval = setInterval(function(){
-		countTime -= 0.5;
+		countTime =(countTime * 10 - 1) / 10;
 		if(countTime >= 0){
 			that.$shadowdiv.text("please wait " + countTime.toString() + " seconds at most...");
+			that.$shadowdiv.css({"opacity": 0.8 - 0.2 * (that.waittime - countTime)});
 		}		
 	},
-	500);
+	100);
 };
 
 ShadowBox.prototype.stopCount = function(){
