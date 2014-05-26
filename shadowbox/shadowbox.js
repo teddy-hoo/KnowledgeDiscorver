@@ -1,6 +1,7 @@
 var ShadowBox = function(content){
 	this.content = content;
 	this.waittime = 0;
+	this.countTime = 0;
 	this.$shadowdiv = $('<div />');
 	this.$shadowdiv.addClass("shadowbox");
 	this.$shadowdiv.attr("id", "shadow");
@@ -27,12 +28,16 @@ ShadowBox.prototype.remove = function(){
 
 ShadowBox.prototype._startCount = function(){
 	that = this;
-	countTime = this.waittime;
+	this.countTime = this.waittime;
 	this.countInterval = setInterval(function(){
-		countTime =(countTime * 10 - 1) / 10;
-		if(countTime >= 0){
-			that.$shadowdiv.text("please wait " + countTime.toString() + " seconds at most...");
-			that.$shadowdiv.css({"opacity": 0.8 - 0.2 * (that.waittime - countTime)});
+		that.countTime = parseInt(that.countTime * 10) / 10;
+		console.log(that.countTime);
+		that.countTime = (that.countTime * 10 - 1) / 10;
+		if(that.countTime >= 0){
+			if(((that.waittime - that.countTime) * 10) % 5 === 0){
+				that.$shadowdiv.text("please wait " + that.countTime.toString() + " seconds at most...");
+			}			
+			that.$shadowdiv.css({"opacity": 0.6 - 0.15 * (that.waittime - that.countTime)});
 		}		
 	},
 	100);
@@ -40,11 +45,13 @@ ShadowBox.prototype._startCount = function(){
 
 ShadowBox.prototype.stopCount = function(){
 	clearInterval(this.countInterval);
+	return this.countTime;
 };
 
 ShadowBox.prototype.setShadow = function(time){
 	if(time != undefined){
 		this.waittime = time;
 	}
+	this.waittime = parseInt(this.waittime * 10) / 10;
 	this.$shadowdiv.text("please wait " + this.waittime.toString() + " seconds at most...");
 };

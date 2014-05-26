@@ -8,8 +8,11 @@ from getngrams import runQuery
 
 PORT = 8000
 waitTimeFile = open('data/waitTime.json', 'r')
-waitTime = waitTimeFile.read()
+waitTime = json.loads(waitTimeFile.read())
 waitTimeFile.close()
+waitTime["time"] = float(waitTime["time"])
+waitTimeList = []
+waitTimeList.append(float(waitTime["time"]))
 
 class Handler(BaseHTTPRequestHandler):
 	def do_GET(self):
@@ -17,7 +20,15 @@ class Handler(BaseHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type', 'application/json')
 			self.end_headers()
-			self.wfile.write(waitTime)
+			if(len(waitTimeList) >= 3):
+				sum = 0
+				for element in waitTimeList:
+					sum += element
+				waitTime["time"] = sum / 3;
+				print waitTime["time"]
+				del waitTimeList[:]
+				waitTimeList.append(waitTime["time"])
+			self.wfile.write(json.dumps(waitTime))
 			return
 		contentType = ''
 		if self.path == '/':
@@ -41,6 +52,12 @@ class Handler(BaseHTTPRequestHandler):
 	def do_POST(self):
 		length = self.headers['content-length']
 		jsondata = self.rfile.read(int(length))
+		if(self.path.endswith("timeused")):
+			waitTimeList.append(waitTime["time"] - float(jsondata))
+			print jsondata
+			self.send_response(200)
+			self.end_headers()
+			return
 		data = json.loads(jsondata)
 		content = runQuery(data["words"])
 		self.send_response(200)

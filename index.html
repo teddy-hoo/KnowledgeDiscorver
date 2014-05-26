@@ -50,16 +50,16 @@
 
       .shadowbox {
         position: absolute;
-        background-color: #A0A0A0;
+        background-color: #FF99FF;
         top: 0;
         left: 0;
         z-index: 1000;
-        opacity: 0.8;
-        box-shadow: 10px 10px 5px #888888;
+        opacity: 0.6;
+        box-shadow: 1px 1px 1px #FF99FF;
         text-align: center;
-        line-height: 300px;
+        line-height: 400px;
         font-family: "Times New Roman";
-        font-size: 50px;
+        font-size: 40px;
         font-color: #FFFF00;
       }
     </style>
@@ -74,10 +74,14 @@
       var plot = null;
       var shadowbox = null;
       var waitTime = 0;
+      var timeUsed = null;
       $(document).ready(function(){
         var action = function(){
           $.get("/waitTime", function(data){
-            waitTime = data[0].time;
+            waitTime = data.time;
+            if(timeUsed !== null){
+              $.post("timeused", timeUsed.toString());
+            }
             generateChart();
           });
         };
@@ -102,7 +106,7 @@
             "words": words
           };
           $.post("", JSON.stringify(data), function(ngramdata){
-            shadowbox.stopCount();
+            timeUsed = shadowbox.stopCount();
             shadowbox.remove();
             btn.button("reset");
             var wordsdata = JSON.parse(ngramdata);
