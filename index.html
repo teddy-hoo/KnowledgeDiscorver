@@ -73,13 +73,21 @@
         ];
       var plot = null;
       var shadowbox = null;
+      var waitTime = 0;
       $(document).ready(function(){
         var action = function(){
+          $.get("/waitTime", function(data){
+            waitTime = data[0].time;
+            generateChart();
+          });
+        };
+        var generateChart = function(){
           var btn = $("#inputbutton");
           btn.button("loading");
           if(shadowbox === null){
-            shadowbox = new ShadowBox("wait for 5 seconds");
+            shadowbox = new ShadowBox();
           }
+          shadowbox.setShadow(waitTime);
           shadowbox.add();
           var word = $("#wordinput").val();
           if(word == ""){

@@ -7,9 +7,18 @@ sys.path.insert(0, 'googleNgram')
 from getngrams import runQuery
 
 PORT = 8000
+waitTimeFile = open('data/waitTime.json', 'r')
+waitTime = waitTimeFile.read()
+waitTimeFile.close()
 
 class Handler(BaseHTTPRequestHandler):
 	def do_GET(self):
+		if(self.path.endswith('waitTime')):
+			self.send_response(200)
+			self.send_header('Content-type', 'application/json')
+			self.end_headers()
+			self.wfile.write(waitTime)
+			return
 		contentType = ''
 		if self.path == '/':
 			self.path = '/index.html'

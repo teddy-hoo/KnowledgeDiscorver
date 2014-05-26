@@ -1,14 +1,14 @@
 var ShadowBox = function(content){
 	this.content = content;
-	this.waittime = 3;
+	this.waittime = 0;
 	this.$shadowdiv = $('<div />');
 	this.$shadowdiv.addClass("shadowbox");
 	this.$shadowdiv.attr("id", "shadow");
-	this.$shadowdiv.text("please wait " + this.waittime.toString() + " seconds at most...");
 	this.countInterval = null;
 };
 
 ShadowBox.prototype.add = function(){
+	this.setShadow();
 	$(document.body).append(this.$shadowdiv);
 	this._startCount();
 	this.resize();
@@ -27,10 +27,11 @@ ShadowBox.prototype.remove = function(){
 
 ShadowBox.prototype._startCount = function(){
 	that = this;
+	countTime = this.waittime;
 	this.countInterval = setInterval(function(){
-		that.waittime -= 0.5;
-		if(that.waittime >= 0){
-			that.$shadowdiv.text("please wait " + that.waittime.toString() + " seconds at most...");
+		countTime -= 0.5;
+		if(countTime >= 0){
+			that.$shadowdiv.text("please wait " + countTime.toString() + " seconds at most...");
 		}		
 	},
 	500);
@@ -38,4 +39,11 @@ ShadowBox.prototype._startCount = function(){
 
 ShadowBox.prototype.stopCount = function(){
 	clearInterval(this.countInterval);
+};
+
+ShadowBox.prototype.setShadow = function(time){
+	if(time != undefined){
+		this.waittime = time;
+	}
+	this.$shadowdiv.text("please wait " + this.waittime.toString() + " seconds at most...");
 };
