@@ -24,8 +24,7 @@ class Handler(BaseHTTPRequestHandler):
 				sum = 0
 				for element in waitTimeList:
 					sum += element
-				waitTime["time"] = sum / 3;
-				print waitTime["time"]
+				waitTime["time"] = sum / 3
 				del waitTimeList[:]
 				waitTimeList.append(waitTime["time"])
 			self.wfile.write(json.dumps(waitTime))
@@ -54,7 +53,6 @@ class Handler(BaseHTTPRequestHandler):
 		jsondata = self.rfile.read(int(length))
 		if(self.path.endswith("timeused")):
 			waitTimeList.append(waitTime["time"] - float(jsondata))
-			print jsondata
 			self.send_response(200)
 			self.end_headers()
 			return

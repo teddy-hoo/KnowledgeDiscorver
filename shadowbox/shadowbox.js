@@ -31,7 +31,6 @@ ShadowBox.prototype._startCount = function(){
 	this.countTime = this.waittime;
 	this.countInterval = setInterval(function(){
 		that.countTime = parseInt(that.countTime * 10) / 10;
-		console.log(that.countTime);
 		that.countTime = (that.countTime * 10 - 1) / 10;
 		if(that.countTime >= 0){
 			if(((that.waittime - that.countTime) * 10) % 5 === 0){
