@@ -1,5 +1,6 @@
 import SocketServer
 import os
+import thread
 import json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import sys
@@ -57,13 +58,22 @@ class Handler(BaseHTTPRequestHandler):
 			self.end_headers()
 			return
 		data = json.loads(jsondata)
-		content = runQuery(data["words"])
+		thread.start_new_thread(runQuery, (data["words"], self.postData))
+		#content = runQuery(data["words"])
+		# self.send_response(200)
+		# self.send_header('Content-type', 'text/html')
+		# self.end_headers()
+		#self.wfile.write(content)
+	def postData(self, content):
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
 		self.wfile.write(content)
 
 httpd = HTTPServer(("127.0.0.1", PORT), Handler)
+
+def xxx():
+	print "xxxx"
 
 print "server at port", PORT
 httpd.serve_forever()

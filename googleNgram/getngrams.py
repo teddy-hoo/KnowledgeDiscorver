@@ -21,7 +21,7 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
     data = re.findall('var data = (.*?);\\n', rawdata)
     return result.url, params['content'], data[0]
 
-def runQuery(argumentString):
+def runQuery(argumentString, callbackfunc):
     query = ''
     if(type(argumentString) is list):
         for word in argumentString:
@@ -40,7 +40,8 @@ def runQuery(argumentString):
     toSave, toPrint, toPlot = True, True, False
 
     url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
-    return df
+    callbackfunc(df)
+    # return df
 
 if __name__ == '__main__':
     argumentString = ' '.join(sys.argv[1:])

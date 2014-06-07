@@ -28,6 +28,8 @@ ShadowBox.prototype.remove = function(){
 
 ShadowBox.prototype._startCount = function(){
 	that = this;
+	var opacity = 0;
+	var isMax = false;
 	this.countTime = this.waittime;
 	this.countInterval = setInterval(function(){
 		that.countTime = parseInt(that.countTime * 10) / 10;
@@ -35,8 +37,12 @@ ShadowBox.prototype._startCount = function(){
 		if(that.countTime >= 0){
 			if(((that.waittime - that.countTime) * 10) % 5 === 0){
 				that.$shadowdiv.text("please wait " + that.countTime.toString() + " seconds at most...");
-			}			
-			that.$shadowdiv.css({"opacity": 0.6 - 0.15 * (that.waittime - that.countTime)});
+			}
+			opacity = isMax ? opacity - 0.05 * (that.waittime - that.countTime - 1) : opacity + 0.4 * (that.waittime - that.countTime);
+			if(opacity > 0.4 ){
+				isMax = true;
+			}
+			that.$shadowdiv.css({"opacity": opacity});
 		}		
 	},
 	100);
