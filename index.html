@@ -106,6 +106,7 @@
             "words": words
           };
           $.post("", JSON.stringify(data), function(ngramdata){
+            alert(ngramdata);
             timeUsed = shadowbox.stopCount();
             shadowbox.remove();
             btn.button("reset");
