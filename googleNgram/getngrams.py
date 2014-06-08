@@ -21,32 +21,26 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
     data = re.findall('var data = (.*?);\\n', rawdata)
     return result.url, params['content'], data[0]
 
-def runQuery(argumentString, context):
-    content = "xxxxx"
-    # context.send_response(200)
-    # context.send_header('Content-type', 'text/plain')
-    # context.end_headers()
-    # context.wfile.write("content")
-    # query = ''
-    # if(type(argumentString) is list):
-    #     for word in argumentString:
-    #         query += word.encode('utf-8').strip() + ','
-    #     query = query[:-1]
-    # else:
-    #     query = argumentString.encode('utf-8').strip()
+def runQuery(argumentString, callbackfunc):
+    query = ''
+    if(type(argumentString) is list):
+        for word in argumentString:
+            query += word.encode('utf-8').strip() + ','
+        query = query[:-1]
+    else:
+        query = argumentString.encode('utf-8').strip()
 
-    # if '?' in query:
-    #     query = query.replace('?', '*')
-    # if '@' in query:
-    #     query = query.replace('@', '=>')
+    if '?' in query:
+        query = query.replace('?', '*')
+    if '@' in query:
+        query = query.replace('@', '=>')
 
-    # corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2008, 3
-    # printHelp, caseInsensitive, allData = False, True, False
-    # toSave, toPrint, toPlot = True, True, False
+    corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2008, 3
+    printHelp, caseInsensitive, allData = False, True, False
+    toSave, toPrint, toPlot = True, True, False
 
-    # url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
-    # callbackfunc("YES")
-    #callbackfunc(df)
+    url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive)
+    callbackfunc(df)
     # return df
 
 if __name__ == '__main__':

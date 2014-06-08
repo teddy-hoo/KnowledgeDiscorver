@@ -16,13 +16,6 @@ waitTimeList = []
 waitTimeList.append(float(waitTime["time"]))
 
 class Handler(BaseHTTPRequestHandler):
-	def __call__(self, content):
-		print "5"
-		self.send_response(200)
-		self.send_header('Content-type', 'text/html')
-		self.end_headers()
-		self.wfile.write("xxx")
-		print "6"
 	def do_GET(self):
 		if(self.path.endswith('waitTime')):
 			self.send_response(200)
@@ -65,27 +58,22 @@ class Handler(BaseHTTPRequestHandler):
 			self.end_headers()
 			return
 		data = json.loads(jsondata)
-		self.content = ''
-		#runQuery(data["words"], postData, self)
-		thread.start_new_thread(runQuery, (data["words"], self.content))
-		thread.start_new_thread(self.postData, (self.content, "xxx"))
-	# def postData(self, content):
-	# 	self.send_response(200)
-	# 	self.send_header('Content-type', 'text/html')
-	# 	self.end_headers()
-	# 	self.wfile.write(content)
-	def postData(self, content, nothing):
-		while(content == ''):
-			pass
-		print content
-		print "3"
+		thread.start_new_thread(runQuery, (data["words"], self.postData))
+		#content = runQuery(data["words"])
+		# self.send_response(200)
+		# self.send_header('Content-type', 'text/html')
+		# self.end_headers()
+		#self.wfile.write(content)
+	def postData(self, content):
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
-		self.wfile.write("xxx")
-		print "4"	
+		self.wfile.write(content)
 
 httpd = HTTPServer(("127.0.0.1", PORT), Handler)
+
+def xxx():
+	print "xxxx"
 
 print "server at port", PORT
 httpd.serve_forever()
