@@ -3,3 +3,8 @@ requests module
 
 run server.py
 type in 127.0.0.1:8000 in your browser
+
+problems on road:
+javascript cross domain access
+make a shadow box can show wait time
+a callback function with a callback parameter when create a new thread in python
