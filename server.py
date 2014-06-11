@@ -1,34 +1,49 @@
 import SocketServer
+import time
 import os
 import thread
 import json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import sys
+import Queue
 sys.path.insert(0, 'googleNgram')
-from getngrams import runQuery
+from getngrams import getKnowledge
 
 PORT = 8000
-waitTimeFile = open('data/waitTime.json', 'r')
-waitTime = json.loads(waitTimeFile.read())
-waitTimeFile.close()
-waitTime["time"] = float(waitTime["time"])
-waitTimeList = []
-waitTimeList.append(float(waitTime["time"]))
+
+queryQueue = Queue.Queue()
+resultQueue = Queue.Queue()
+gkTread = getKnowledge(queryQueue, resultQueue)
+# self.gkTread.setSendFunc(self.wfile.write)
+gkTread.start()
 
 class Handler(BaseHTTPRequestHandler):
+	def __init__(self, *args, **kargs):
+		self.waitTimeList = []
+		self.waitTime = {}
+		self._initWaitTime()
+		BaseHTTPRequestHandler.__init__(self, *args, **kargs)
+
+	def _initWaitTime(self):
+		waitTimeFile = open('data/waitTime.json', 'r')
+		self.waitTime = json.loads(waitTimeFile.read())
+		waitTimeFile.close()
+		self.waitTime["time"] = float(self.waitTime["time"])
+		self.waitTimeList.append(float(self.waitTime["time"]))
+
 	def do_GET(self):
 		if(self.path.endswith('waitTime')):
 			self.send_response(200)
 			self.send_header('Content-type', 'application/json')
 			self.end_headers()
-			if(len(waitTimeList) >= 3):
+			if(len(self.waitTimeList) >= 3):
 				sum = 0
-				for element in waitTimeList:
+				for element in self.waitTimeList:
 					sum += element
-				waitTime["time"] = sum / 3
-				del waitTimeList[:]
-				waitTimeList.append(waitTime["time"])
-			self.wfile.write(json.dumps(waitTime))
+				self.waitTime["time"] = sum / 3
+				del self.waitTimeList[:]
+				self.waitTimeList.append(self.waitTime["time"])
+			self.wfile.write(json.dumps(self.waitTime))
 			return
 		contentType = ''
 		if self.path == '/':
@@ -49,31 +64,19 @@ class Handler(BaseHTTPRequestHandler):
 		self.send_header('Content-type', contentType)
 		self.end_headers()
 		self.wfile.write(sendfile.read())
+
 	def do_POST(self):
 		length = self.headers['content-length']
 		jsondata = self.rfile.read(int(length))
 		if(self.path.endswith("timeused")):
-			waitTimeList.append(waitTime["time"] - float(jsondata))
+			waitTimeList.append(self.waitTime["time"] - float(jsondata))
 			self.send_response(200)
 			self.end_headers()
 			return
 		data = json.loads(jsondata)
-		thread.start_new_thread(runQuery, (data["words"], self.postData))
-		#content = runQuery(data["words"])
-		# self.send_response(200)
-		# self.send_header('Content-type', 'text/html')
-		# self.end_headers()
-		#self.wfile.write(content)
-	def postData(self, content):
-		self.send_response(200)
-		self.send_header('Content-type', 'text/html')
-		self.end_headers()
-		self.wfile.write(content)
+		queryQueue.put(data["words"])
+		self.wfile.write(resultQueue.get())
 
 httpd = HTTPServer(("127.0.0.1", PORT), Handler)
-
-def xxx():
-	print "xxxx"
-
 print "server at port", PORT
 httpd.serve_forever()
