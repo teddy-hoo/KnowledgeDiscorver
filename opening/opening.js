@@ -1,32 +1,32 @@
-var ShadowBox = function(content){
-	this.content = content;
-	this.waittime = 0;
-	this.countTime = 0;
-	this.$shadowdiv = $('<div />');
-	this.$shadowdiv.addClass("shadowbox");
-	this.$shadowdiv.attr("id", "shadow");
-	this.countInterval = null;
+var Openging = function(selection){
+	this.selection = selection;
 };
 
-ShadowBox.prototype.add = function(){
-	this.setShadow();
-	$(document.body).append(this.$shadowdiv);
-	this._startCount();
-	this.resize();
+Openging.prototype.play = function(){
+	var circle = this.selection.append("circle");
+	circle.attr("cx", this._scaleChange("cx"))
+		.attr("cy", this._scaleChange("cy"))
+		.attr("r", this._scaleChange("r"))
+		.attr("fill", "red");
 };
 
-ShadowBox.prototype.resize = function(){
+Openging.prototype._scaleChange = function(attrType){
+	var start = time.
+	if(attrType == )
+}
+
+Openging.prototype.resize = function(){
 	this.$shadowdiv.css({
 		width: $(window).width(),
 		height: $("#container").height()
 	});
 };
 
-ShadowBox.prototype.remove = function(){
+Openging.prototype.remove = function(){
 	$("#shadow").remove();
 };
 
-ShadowBox.prototype._startCount = function(){
+Openging.prototype._startCount = function(){
 	that = this;
 	var opacity = 0;
 	var isMax = false;
@@ -48,15 +48,17 @@ ShadowBox.prototype._startCount = function(){
 	100);
 };
 
-ShadowBox.prototype.stopCount = function(){
+Openging.prototype.stopCount = function(){
 	clearInterval(this.countInterval);
 	return this.countTime;
 };
 
-ShadowBox.prototype.setShadow = function(time){
+Openging.prototype.setShadow = function(time){
 	if(time != undefined){
 		this.waittime = time;
 	}
 	this.waittime = parseInt(this.waittime * 10) / 10;
 	this.$shadowdiv.text("please wait " + this.waittime.toFixed(1) + " seconds at most...");
 };
+
+//<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>
