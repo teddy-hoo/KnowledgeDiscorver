@@ -24,6 +24,7 @@ class getKnowledge(threading.Thread):
     def _getQuery(self, argumentString):
         if(type(argumentString) is list):
             for word in argumentString:
+                self.query = ''
                 self.query += word.encode('utf-8').strip() + ','
                 self.query = self.query[:-1]
         else:

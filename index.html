@@ -130,11 +130,12 @@
               plot.setData(dataforrender);
               plot.update();
             }
-            $("#canvas").hide();
             $("#canvas").show("clip");
-            $("#wordlist").hide();
+            
             $("#wordlist").show("clip");
           });
+          $("#canvas").hide("clip");
+          $("#wordlist").hide("clip");
           $("#wordlist").empty();
           $newol = $('<ol />');
             $newol.attr({
