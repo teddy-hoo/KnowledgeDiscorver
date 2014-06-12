@@ -35,14 +35,20 @@ Opening.prototype._charStroke = function(){
 Opening.prototype._scaleChange = function(){
 	this.circle
 		.transition()
-		.duration(1000)
+		.duration(500)
 		.delay(0)
-		.attr('rx', 100)
-		.attr('ry', 100);
+		.attr('rx', 150)
+		.attr('ry', 150);
 	this.circle
 		.transition()
 		.duration(500)
-		.delay(1000)
+		.delay(500)
+		.attr('rx', 100)
+		.attr('ry', 100);	
+	this.circle
+		.transition()
+		.duration(500)
+		.delay(2000)
 		.attr("fill", "#FFC0CB")
 		.attr('rx', 260)
 		.attr('ry', 160);
