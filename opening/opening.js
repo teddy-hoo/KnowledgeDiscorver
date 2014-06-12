@@ -1,64 +1,70 @@
-var Openging = function(selection){
+var Opening = function(selection){
 	this.selection = selection;
+	this.circle = null;
+	this.svg = null;
 };
 
-Openging.prototype.play = function(){
-	var circle = this.selection.append("circle");
-	circle.attr("cx", this._scaleChange("cx"))
-		.attr("cy", this._scaleChange("cy"))
-		.attr("r", this._scaleChange("r"))
-		.attr("fill", "red");
+Opening.prototype.play = function(){
+	this.svg = this.selection.append("svg")
+				.attr("id", "openingsvg");
+	this.circle = this.svg.append("ellipse");
+	this.circle.attr("cx", parseInt(this.svg.style("width")) / 2)
+		.attr("cy", parseInt(this.svg.style("height")) / 2 - 200)
+		.attr("rx", 0)
+		.attr("ry", 0)
+		.attr("fill", "#FFC0CB");
+	this._scaleChange();
+	this._charStroke();
 };
 
-Openging.prototype._scaleChange = function(attrType){
-	var start = time.
-	if(attrType == )
+Opening.prototype._charStroke = function(){
+	var that = this;
+	var charSData = charStrokeData();
+	var chars = ["path3076", "path3078"];
+	chars.forEach(function(charName){
+		that.svg.append("path")
+            .attr("d",charSData[charName])
+            .style("stroke-width", 2)
+            .style("stroke", "steelblue")
+            .style("fill", "none")
+            .attr('id', charName);
+        that._simulatePathDrawing($("#" + charName)[0]);
+	});
 }
 
-Openging.prototype.resize = function(){
-	this.$shadowdiv.css({
-		width: $(window).width(),
-		height: $("#container").height()
-	});
-};
+Opening.prototype._scaleChange = function(){
+	this.circle
+		.transition()
+		.duration(1000)
+		.delay(0)
+		.attr('rx', 100)
+		.attr('ry', 100);
+	this.circle
+		.transition()
+		.duration(500)
+		.delay(1000)
+		.attr("fill", "#FFC0CB")
+		.attr('rx', 260)
+		.attr('ry', 160);
+}
 
-Openging.prototype.remove = function(){
-	$("#shadow").remove();
+Opening.prototype._simulatePathDrawing = function (path) {
+  // var path = document.querySelector('.squiggle-animated path');
+  var length = path.getTotalLength();
+  // Clear any previous transition
+  path.style.transition = path.style.WebkitTransition =
+  'none';
+  // Set up the starting positions
+  path.style.strokeDasharray = length + ' ' + length;
+  path.style.strokeDashoffset = length;
+  // Trigger a layout so styles are calculated & the browser
+  // picks up the starting position before animating
+  path.getBoundingClientRect();
+  // Define our transition
+  path.style.transition = path.style.WebkitTransition =
+  'stroke-dashoffset 1.5s ease-in-out';
+  // Go!
+  path.style.strokeDashoffset = '0';
+  path.style.strokeWidth = '3px';
+  path.style.fill = 'rgba(255,255,0,.12)';
 };
-
-Openging.prototype._startCount = function(){
-	that = this;
-	var opacity = 0;
-	var isMax = false;
-	this.countTime = this.waittime;
-	this.countInterval = setInterval(function(){
-		that.countTime = parseInt(that.countTime * 10) / 10;
-		that.countTime = (that.countTime * 10 - 1) / 10;
-		if(that.countTime >= 0){
-			if(((that.waittime - that.countTime).toFixed(1) * 10) % 5 === 0){
-				that.$shadowdiv.text("please wait " + that.countTime.toFixed(1) + " seconds at most...");
-			}
-			opacity = isMax ? (opacity - 0.002 * (that.waittime - that.countTime - 1)) : (opacity + 0.4 * (that.waittime - that.countTime));
-			if(opacity > 0.4 ){
-				isMax = true;
-			}
-			that.$shadowdiv.css({"opacity": opacity});
-		}
-	},
-	100);
-};
-
-Openging.prototype.stopCount = function(){
-	clearInterval(this.countInterval);
-	return this.countTime;
-};
-
-Openging.prototype.setShadow = function(time){
-	if(time != undefined){
-		this.waittime = time;
-	}
-	this.waittime = parseInt(this.waittime * 10) / 10;
-	this.$shadowdiv.text("please wait " + this.waittime.toFixed(1) + " seconds at most...");
-};
-
-//<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>

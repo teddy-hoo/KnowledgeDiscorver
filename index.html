@@ -18,6 +18,7 @@
     <script src="draw/generatechart.js"></script>
     <script src="shadowbox/shadowbox.js"></script>
     <script src="opening/opening.js"></script>
+    <script src="opening/charStrokeData.js"></script>
 
     <title>Knowledge Discover</title>
     <script>
@@ -64,7 +65,7 @@
 
         var openingAction = function(){
           $("#container").hide();
-          var opening = new Openging(d3.select("opening"));
+          var opening = new Opening(d3.select("#openingdiv"));
           opening.play();
           $("#container").show();
         }
@@ -111,9 +112,6 @@
         <p>&copy; Company 2014</p>
       </div>
     </div>
-    <div id="openingdiv">
-      <svg id="opening">
-      </svg>
-    </div>
+    <div id="openingdiv"></div>
   </body>
 </html>
