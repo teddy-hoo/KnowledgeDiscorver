@@ -9,60 +9,18 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
     <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
     <script src="libs/jquery/jquery-1.11.1.min.js"></script>
     <script src="libs/d3/d3.min.js"></script>
     <script src="libs/jqueryui/js/jquery-ui-1.10.4.custom.js"></script>
     <script src="libs/bootstrap/js/bootstrap.js"></script>
     <script src="draw/draw.js"></script>
+    <script src="draw/generatechart.js"></script>
     <script src="shadowbox/shadowbox.js"></script>
+    <script src="opening/opening.js"></script>
+    <script src="opening/charStrokeData.js"></script>
 
     <title>Knowledge Discover</title>
-    <style>
-      .ui-tooltip {
-        color: rgb(255,20,147);
-        background-color: transparent;
-        padding: 6px;
-        position: absolute;
-        z-index: 100;
-        max-width: 300px;
-        -webkit-box-shadow: 0 0 5px #aaa;
-        box-shadow: 0 0 12px #aaa;
-      }
-      .axis path,
-      .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-      }
-
-      .x.axis path {
-        display: none;
-      }
-
-      .line {
-        fill: none;
-        stroke: steelblue;
-        stroke-width: 1.5px;
-      }
-
-      .tag {
-      }
-
-      .shadowbox {
-        position: absolute;
-        background-color: #E0E0E0;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        opacity: 0;
-        box-shadow: 0px 0px 5px 5px #E0E0E0;
-        text-align: center;
-        line-height: 400px;
-        font-family: "Times New Roman";
-        font-size: 40px;
-        font-color: #F0F0F0;
-      }
-    </style>
     <script>
       var wordtagcss = [
         'label label-primary',
@@ -76,6 +34,42 @@
       var waitTime = 0;
       var timeUsed = null;
       $(document).ready(function(){
+        var Prepare = function(){
+          $(document).tooltip();
+          $(window).resize(function(){
+            if(shadowbox){
+              shadowbox.resize();
+            }
+            if(plot && plot.resize){
+              $("#canvas").attr("width", $("#container").width() - 200);
+              plot.resize({
+                "width": $(window).width()
+              });
+            }          
+          });
+
+          $("#wordlist").hide();
+          $("#canvas").hide();
+          $("#wordinput").focus();
+
+          $("#inputbutton").click(function(){                   
+            action();
+          });
+          $("#wordinput").keydown(function(event){
+            if(event.which == 13){
+              event.preventDefault();
+              action();
+            }
+          });
+        }
+
+        var openingAction = function(){
+          $("#container").hide();
+          var opening = new Opening(d3.select("#openingdiv"));
+          opening.play();
+          $("#container").show();
+        }
+
         var action = function(){
           $.get("/waitTime", function(data){
             waitTime = data.time;
@@ -85,100 +79,8 @@
             generateChart();
           });
         };
-        var generateChart = function(){
-          var btn = $("#inputbutton");
-          btn.button("loading");
-          if(shadowbox === null){
-            shadowbox = new ShadowBox();
-          }
-          shadowbox.setShadow(waitTime);
-          shadowbox.add();
-          var word = $("#wordinput").val();
-          if(word == ""){
-            $("#canvas").hide("clip");
-            $("#wordlist").hide("clip");
-            btn.button("reset");
-            shadowbox.remove();
-            return;
-          }
-          var words = word.split(',');
-          var data = {
-            "words": words
-          };
-          $.post("", JSON.stringify(data), function(ngramdata){
-            timeUsed = shadowbox.stopCount();
-            shadowbox.remove();
-            btn.button("reset");
-            var wordsdata = JSON.parse(ngramdata);
-            var dataforrender = [];
-            var wordcount = wordsdata.length;
-            var timelength = wordsdata[0].timeseries.length;
-            for(var i = 0; i < timelength; ++i){
-              var subdata = {};
-              for(var j = 0; j < wordcount; ++j){
-                subdata[wordsdata[j].ngram] = wordsdata[j].timeseries[i];
-              }
-              subdata["time"] = (18000000 + 10000 * i).toString();
-              dataforrender.push(subdata);
-            }
-            if(plot === null){
-              plot = new Draw();
-              plot.setData(dataforrender);
-              plot.render();
-            }            
-            else{
-              plot.setData(dataforrender);
-              plot.update();
-            }
-            $("#canvas").hide();
-            $("#canvas").show("clip");
-            $("#wordlist").hide();
-            $("#wordlist").show("clip");
-          });
-          $("#wordlist").empty();
-          $newol = $('<ol />');
-            $newol.attr({
-              "class": "breadcrumb"
-            });
-          for(var i = 0; i < words.length; ++i){            
-            $newli = $('<li />');
-            $newspan = $('<span />');
-            $newspan.attr({
-              "class": wordtagcss[parseInt(Math.random() * 5)]
-            });
-            $newspan.text(words[i]);
-            $newli.append($newspan);
-            $newol.append($newli);
-            $("#wordlist").append($newol); 
-          }
-        };
-        $(document).tooltip();
-        $(window).resize(function(){
-          if(shadowbox){
-            shadowbox.resize();
-          }
-          if(plot && plot.resize){
-            $("#canvas").attr("width", $("#container").width() - 200);
-            plot.resize({
-              "width": $(window).width()
-            });
-          }          
-        });
-
-        $("#wordlist").hide();
-        $("#canvas").hide();
-
-        $("#wordinput").focus();
-
-        $("#inputbutton").click(function(){                   
-          action();
-        });
-        $("#wordinput").keydown(function(event){
-          if(event.which == 13){
-            event.preventDefault();
-            action();
-          }
-        });
+        openingAction();
+        Prepare();
       });
     </script>
   </head>
@@ -210,5 +112,6 @@
         <p>&copy; Company 2014</p>
       </div>
     </div>
+    <div id="openingdiv"></div>
   </body>
 </html>

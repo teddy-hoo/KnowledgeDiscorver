@@ -1,21 +1,33 @@
 import SocketServer
+import time
 import os
 import thread
 import json
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import sys
+import Queue
 sys.path.insert(0, 'googleNgram')
-from getngrams import runQuery
+from getngrams import getKnowledge
 
 PORT = 8000
+
+queryQueue = Queue.Queue()
+resultQueue = Queue.Queue()
+gkTread = getKnowledge(queryQueue, resultQueue)
+gkTread.start()
+
+waitTimeList = []
 waitTimeFile = open('data/waitTime.json', 'r')
 waitTime = json.loads(waitTimeFile.read())
 waitTimeFile.close()
 waitTime["time"] = float(waitTime["time"])
-waitTimeList = []
 waitTimeList.append(float(waitTime["time"]))
 
 class Handler(BaseHTTPRequestHandler):
+	def __init__(self, *args, **kargs):
+
+		BaseHTTPRequestHandler.__init__(self, *args, **kargs)
+
 	def do_GET(self):
 		if(self.path.endswith('waitTime')):
 			self.send_response(200)
@@ -49,6 +61,7 @@ class Handler(BaseHTTPRequestHandler):
 		self.send_header('Content-type', contentType)
 		self.end_headers()
 		self.wfile.write(sendfile.read())
+
 	def do_POST(self):
 		length = self.headers['content-length']
 		jsondata = self.rfile.read(int(length))
@@ -58,17 +71,8 @@ class Handler(BaseHTTPRequestHandler):
 			self.end_headers()
 			return
 		data = json.loads(jsondata)
-		thread.start_new_thread(runQuery, (data["words"], self.postData))
-		#content = runQuery(data["words"])
-		# self.send_response(200)
-		# self.send_header('Content-type', 'text/html')
-		# self.end_headers()
-		#self.wfile.write(content)
-	def postData(self, content):
-		self.send_response(200)
-		self.send_header('Content-type', 'text/html')
-		self.end_headers()
-		self.wfile.write(content)
+		queryQueue.put(data["words"])
+		self.wfile.write(resultQueue.get())
 
 httpd = HTTPServer(("127.0.0.1", PORT), Handler)
 print "server at port", PORT
