@@ -71,9 +71,5 @@ class Handler(BaseHTTPRequestHandler):
 		self.wfile.write(content)
 
 httpd = HTTPServer(("127.0.0.1", PORT), Handler)
-
-def xxx():
-	print "xxxx"
-
 print "server at port", PORT
 httpd.serve_forever()
