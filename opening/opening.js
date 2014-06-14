@@ -13,30 +13,34 @@ Opening.prototype.play = function(){
 		.attr("rx", 0)
 		.attr("ry", 0)
 		.attr("fill", "#FFC0CB");
-	this.svgforStroke = this.selection.append("svg")
-				.attr("id", "strokesvg")
-				.style("left", this.circle.attr("cx") - 200)
-				.style("top", this.circle.attr("cy") - 100)
-				.style("width", 800)
-				.style("height", 400)
-				.style("position", "absolute");
 	this._scaleChange();
 	this._charStroke();
+	this.selection.transition()
+		.duration(1000)
+		.delay(3000)
+		.style("opacity", 0)
+		.remove();
 };
 
 Opening.prototype._charStroke = function(){
 	var that = this;
 	var charSData = charStrokeData();
-	var chars = ["path3050"];
-	chars.forEach(function(charName){
-		that.svgforStroke.append("path")
-            .attr("d", charSData[charName].replace(/m .+? /gi, "m 100,150 "))
-            .style("stroke-width", 2)
-            .style("stroke", "steelblue")
-            .style("fill", "none")
-            .attr('id', charName);
-        setTimeout(function(){that._simulatePathDrawing($("#" + charName)[0]);}, 1000);
-	});
+	var chars = ["s", "e", "a", "r", "c", "h"];
+	var cx = this.circle.attr("cx") - 200;
+	var cy = this.circle.attr("cy");
+	setTimeout(function(){
+		chars.forEach(function(charName){
+			that.svg.append("path")
+	            .attr("d", charSData[charName].replace(/m .+? /gi, "m " + cx + ',' + cy + ' '))
+	            .style("stroke-width", 2)
+	            .style("stroke", "steelblue")
+	            .style("fill", "#FFC0CB")
+	            .attr('id', charName);
+        		cx += 100;
+        		that._simulatePathDrawing($("#" + charName)[0]);
+        	});
+		}, 
+		1000);
 }
 
 Opening.prototype._scaleChange = function(){
