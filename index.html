@@ -71,12 +71,20 @@
         }
 
         var action = function(){
+          var word = $("#wordinput").val();
+          if(word == ""){
+            $("#canvas").hide("clip");
+            $("#wordlist").hide("clip");
+            btn.button("reset");
+            shadowbox.remove();
+            return;
+          }
           $.get("/waitTime", function(data){
             waitTime = data.time;
             if(timeUsed !== null){
               $.post("timeused", timeUsed.toString());
             }
-            generateChart();
+            generateChart(word);
           });
         };
         openingAction();

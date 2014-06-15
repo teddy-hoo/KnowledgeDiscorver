@@ -1,4 +1,4 @@
-var generateChart = function(){
+var generateChart = function(word){
           var btn = $("#inputbutton");
           btn.button("loading");
           if(shadowbox === null){
@@ -6,14 +6,6 @@ var generateChart = function(){
           }
           shadowbox.setShadow(waitTime);
           shadowbox.add();
-          var word = $("#wordinput").val();
-          if(word == ""){
-            $("#canvas").hide("clip");
-            $("#wordlist").hide("clip");
-            btn.button("reset");
-            shadowbox.remove();
-            return;
-          }
           var words = word.split(',');
           var data = {
             "words": words
