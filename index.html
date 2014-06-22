@@ -19,6 +19,7 @@
     <script src="shadowbox/shadowbox.js"></script>
     <script src="opening/opening.js"></script>
     <script src="opening/charStrokeData.js"></script>
+    <script src="opening/makeTitle.js"></script>
 
     <title>Knowledge Discover</title>
     <script>
@@ -35,6 +36,8 @@
       var timeUsed = null;
       $(document).ready(function(){
         var Prepare = function(){
+          var title = new Title("Knowledge Discover", document.getElementById("title"));
+          title.makeTtile();
           $(document).tooltip();
           $(window).resize(function(){
             if(shadowbox){
@@ -95,8 +98,7 @@
 
   <body>
     <div id="container" class="container">
-      <div class="header">
-        <h3 class="text-muted">Knowledge Discover</h3>
+      <div id="title">
       </div>
       <div id="inputcenter" class="jumbotron">
         <p class="lead">Input whatever words you want to Know!</p>
@@ -107,9 +109,9 @@
               <span class="input-group-btn">
                 <button id="inputbutton" class="btn btn-default" data-loading-text="Loading..." type="button">Search</button>
               </span>
-            </div><!-- /input-group -->
-          </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->
+            </div>
+          </div>
+        </div>
         <p>
           <div id="wordlist">
           </div>
