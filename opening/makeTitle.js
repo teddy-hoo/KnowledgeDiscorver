@@ -16,6 +16,7 @@ Title.prototype.makeTtile = function(){
 	that = this;
 	this._createContainer();
 	this.selection.appendChild(this.container);
+	this.container.setAttribute("style", '-webkit-transform: translateZ(50px)');
 	this.titleElements.forEach(function(e){
 		that.container.appendChild(e);
 	});
@@ -33,5 +34,6 @@ Title.prototype._createContainer = function(){
 		}
 		letterElement.textContent = letter;
 		letterElement.setAttribute("style", "color:" + that.colorPalette[letter]);
+		letterElement.setAttribute('transform', 'translate3d('+10+'px,'+10+'px,'+10+'px)');
 	});
 };

@@ -61,8 +61,7 @@ Opening.prototype._scaleChange = function(){
 
 Opening.prototype._simulatePathDrawing = function (path) {
   var length = path.getTotalLength();
-  path.style.transition = path.style.WebkitTransition =
-  'none';
+  path.style.transition = path.style.WebkitTransition = 'none';
   path.style.strokeDasharray = length + ' ' + length;
   path.style.strokeDashoffset = length;
   path.getBoundingClientRect();
