@@ -36,7 +36,7 @@ Opening.prototype._charStroke = function(){
       that.svg.append("path")
 	.attr("d", charSData[charName].replace(/m .+? /, "m " + curCx + ',' + curCy + ' '))
 	.style("stroke-width", 2)
-	.style("stroke", "steelblue")
+	.style("stroke", "yellow")
 	.style("fill", "#FFC0CB")
 	.attr('id', charName);
       that._simulatePathDrawing($("#" + charName)[0]);
@@ -68,6 +68,5 @@ Opening.prototype._simulatePathDrawing = function (path) {
   path.getBoundingClientRect();
   path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 1s ease-in-out';
   path.style.strokeDashoffset = '0';
-  path.style.strokeWidth = '3px';
-  path.style.fill = 'rgba(255,255,0,.12)';
+  path.style.fill = "transparent";
 };

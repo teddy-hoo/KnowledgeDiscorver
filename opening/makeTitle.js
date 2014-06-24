@@ -18,7 +18,7 @@ Title.prototype.makeTtile = function(){
   that = this;
   this._createContainer();
   this.selection.appendChild(this.container);
-  this.container.setAttribute("style", 'height: 200px; -webkit-perspective-origin: 150% 150%;-webkit-perspective: 250px;-webkit-transform-style: preserve-3d;');
+  this.container.setAttribute("style", 'height: 100px; -webkit-perspective-origin: 150% 150%;-webkit-perspective: 250px;-webkit-transform-style: preserve-3d;');
   this.titleElements.forEach(function(e){
     that.container.appendChild(e);
   });
@@ -38,7 +38,8 @@ Title.prototype._createContainer = function(){
     }
     letterElement.textContent = letter;
     letterElement.setAttribute("style", "color:" + that.colorPalette[letter]);
-    letterElement.setAttribute("style", 'color:' + that.colorPalette[letter] + '; -webkit-transform: translateZ(' + index * 1 + 'px)');
+    letterElement.setAttribute("style", 'color:' + that.colorPalette[letter]
+                               + '; -webkit-transform: translateZ(' + index * 1 + 'px)');
   });
 };
 
