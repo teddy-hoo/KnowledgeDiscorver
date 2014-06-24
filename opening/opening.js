@@ -18,7 +18,7 @@ Opening.prototype.play = function(){
   this._charStroke();
   this.selection.transition()
     .duration(1000)
-    .delay(3000)
+    .delay(3500)
     .style("opacity", 0)
     .remove();
 };
@@ -66,7 +66,7 @@ Opening.prototype._simulatePathDrawing = function (path) {
   path.style.strokeDasharray = length + ' ' + length;
   path.style.strokeDashoffset = length;
   path.getBoundingClientRect();
-  path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 1s ease-in-out';
+  path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 2s ease-in-out';
   path.style.strokeDashoffset = '0';
   path.style.fill = "transparent";
 };
