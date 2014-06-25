@@ -13,7 +13,7 @@ var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
   this.letterPerLine = 0;
   this.lineCount = 1;
   this.containerWidth = width || window.innerWidth;
-  this.containerHeight = height || 100;
+  this.containerHeight = height || 50;
 };
 
 Title.prototype.setSelection = function(selection){
@@ -50,10 +50,11 @@ Title.prototype._createContainer = function(){
     letterdiv.setAttribute("id", "font" + index);
     letterdiv.setAttribute("style", 'background-color: #FFE4E1; position: absolute;' +
                            'color:' + that.colorPalette[letter] +
-                           '; width: 0px; height: 0px; top: ' + (parseInt(index / that.letterPerLine) * that.fontHeight) +
-                           'px; left: ' + (parseInt(index % that.letterPerLine) * that.fontWidth) + 'px;' +
+                           '; width: 0px; height: 0px; top: ' + (parseInt(index / that.letterPerLine) * that.fontHeight  + that.fontHeight / 2) +
+                           'px; left: ' + (parseInt(index % that.letterPerLine) * that.fontWidth + that.fontWidth / 2) + 'px;' +
                            'transition-duration: 1s; text-align: center; vertical-align: middle;' +
-                           '-webkit-transition:height 1s, width 1s;');
+                           '-webkit-transition:height 1s, width 1s, margin 1s;' +
+                           '-webkit-animation-duration: 5s; -webkit-animation-iteration-count:10000;');
   });
   this.titleElements.forEach(function(e){
     that.container.appendChild(e);
@@ -62,9 +63,10 @@ Title.prototype._createContainer = function(){
     var nodes = that.container.childNodes;
   for(var key in nodes){
     if(nodes[key].style && nodes[key].style){
-      nodes[key].style.width = that.fontWidth - 10 + "px";
-      nodes[key].style.height = that.fontHeight - 10 + "px";
-      //nodes[key].style.line-height = that.fontHeight + "px";
+      nodes[key].style.width = that.fontWidth + "px";
+      nodes[key].style.height = that.fontHeight + "px";
+      nodes[key].style.top = (parseInt(nodes[key].style.top) - that.fontHeight / 2) + "px";
+      nodes[key].style.left = (parseInt(nodes[key].style.left) - that.fontWidth / 2) + "px";
     }
   }
   }, 3500);
