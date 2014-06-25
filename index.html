@@ -40,6 +40,9 @@
           title.makeTtile();
           $(document).tooltip();
           $(window).resize(function(){
+            if(title){
+              title.resize();
+            }
             if(shadowbox){
               shadowbox.resize();
             }
