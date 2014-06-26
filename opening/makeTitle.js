@@ -16,15 +16,11 @@ var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
 };
 
 Title.prototype._hoverHandler = function(oEvent){
-  var width = parseInt(oEvent.currentTarget.style.width);
-  var height = parseInt(oEvent.currentTarget.style.height);
-  oEvent.currentTarget.style.width = width * 1.5 + "px";
-  oEvent.currentTarget.style.height = height * 1.5 + "px";
+  oEvent.currentTarget.style["-webkit-transform"] = "translateZ(50px)";
 };
 
 Title.prototype._mouseoutHandler = function(oEvent){
-  oEvent.currentTarget.style.width = "0px";
-  oEvent.currentTarget.style.height = "0px";
+  oEvent.currentTarget.style["-webkit-transform"] = "";
 };
 
 Title.prototype.setSelection = function(selection){
@@ -47,7 +43,9 @@ Title.prototype.makeTtile = function(){
 Title.prototype._createContainer = function(){
   this._getPerfectPosition();
   this.container.setAttribute("style", "width: " + this.containerWidth +
-                              "px; height: " + this.containerHeight);
+                              "px; height: " + this.containerHeight +
+                              "; -webkit-transform-style: preserve-3d;" +
+                              "-webkit-animation: spin 10s infinite linear;");
 
   var that = this;
   this.rawTitle.forEach(function(letter, index){
