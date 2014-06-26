@@ -4,16 +4,27 @@ var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
   this.rawTitle = rawTitle.split("");
   this.selection = selection;
   this.container = null;
-  this.fontSize = fontsize;
   this.titleElements = [];
   this.colorPalette = {};
   this.fontColors = fontColors || fontColor;
-  this.fontWidth = "50px";
-  this.fontHeight = "50px";
+  this.fontRuler = fontsize || 50;
   this.letterPerLine = 0;
   this.lineCount = 1;
   this.containerWidth = width || window.innerWidth;
-  this.containerHeight = height || 50;
+  this.containerHeight = height || 100;
+  //this._createHoveCSS();
+};
+
+Title.prototype._hoverHandler = function(oEvent){
+  var width = parseInt(oEvent.currentTarget.style.width);
+  var height = parseInt(oEvent.currentTarget.style.height);
+  oEvent.currentTarget.style.width = width * 1.5 + "px";
+  oEvent.currentTarget.style.height = height * 1.5 + "px";
+};
+
+Title.prototype._mouseoutHandler = function(oEvent){
+  oEvent.currentTarget.style.width = "0px";
+  oEvent.currentTarget.style.height = "0px";
 };
 
 Title.prototype.setSelection = function(selection){
@@ -36,8 +47,7 @@ Title.prototype.makeTtile = function(){
 Title.prototype._createContainer = function(){
   this._getPerfectPosition();
   this.container.setAttribute("style", "width: " + this.containerWidth +
-                              "px; height: " + this.containerHeight +
-                              "px; font-size: " + this.fontSize + "px;");
+                              "px; height: " + this.containerHeight);
 
   var that = this;
   this.rawTitle.forEach(function(letter, index){
@@ -47,51 +57,69 @@ Title.prototype._createContainer = function(){
       that.colorPalette[letter] = that.fontColors[(index) % that.fontColors.length];
     }
     letterdiv.textContent = letter;
+    letterdiv.setAttribute("class", "c_font");
     letterdiv.setAttribute("id", "font" + index);
-    letterdiv.setAttribute("style", 'background-color: #FFE4E1; position: absolute;' +
+    letterdiv.setAttribute("style", 'display: inline-block; border-color: #FFE4E1; border-width: 0px; border-style: solid; ' +
+                           '-webkit-box-sizing: border-box; -webkit-transform: ; ' +
+                           'position: absolute; font-size: 0px; z-index: 1000; ' +
                            'color:' + that.colorPalette[letter] +
-                           '; width: 0px; height: 0px; top: ' + (parseInt(index / that.letterPerLine) * that.fontHeight  + that.fontHeight / 2) +
-                           'px; left: ' + (parseInt(index % that.letterPerLine) * that.fontWidth + that.fontWidth / 2) + 'px;' +
-                           'transition-duration: 1s; text-align: center; vertical-align: middle;' +
-                           '-webkit-transition:height 1s, width 1s, margin 1s;' +
-                           '-webkit-animation-duration: 5s; -webkit-animation-iteration-count:10000;');
+                           '; width: 0px; height: 0px; top: ' +
+                           (Math.ceil((index + 0.1) / that.letterPerLine) * that.fontRuler  + that.fontRuler / 2) +
+                           'px; left: ' +
+                           (parseInt(index % that.letterPerLine) * that.fontRuler) + 'px;' +
+                           'text-align: center; ' +
+                           '-webkit-transition: 0.5s;');
   });
   this.titleElements.forEach(function(e){
     that.container.appendChild(e);
   });
+  var s = this.fontRuler / 8;
   setTimeout(function(){
     var nodes = that.container.childNodes;
-  for(var key in nodes){
-    if(nodes[key].style && nodes[key].style){
-      nodes[key].style.width = that.fontWidth + "px";
-      nodes[key].style.height = that.fontHeight + "px";
-      nodes[key].style.top = (parseInt(nodes[key].style.top) - that.fontHeight / 2) + "px";
-      nodes[key].style.left = (parseInt(nodes[key].style.left) - that.fontWidth / 2) + "px";
+    for(var key in nodes){
+      if(nodes[key].style && nodes[key].style){
+        nodes[key].style["width"] = that.fontRuler + "px";
+        nodes[key].style["height"] = that.fontRuler + "px";
+        nodes[key].style["border-top-width"] = s / 2 + "px";
+        nodes[key].style["border-left-width"] = s * 2 + "px";
+        nodes[key].style["border-right-width"] = s * 6 + "px";
+        nodes[key].style["border-bottom-width"] = s * 9 + "px";
+        nodes[key].style["font-size"] = that.fontRuler + "px";
+        nodes[key].addEventListener("mouseover", that._hoverHandler);
+        nodes[key].addEventListener("mouseout", that._mouseoutHandler);
+      }
     }
-  }
-  }, 3500);
-  //var nodes = this.container.childNodes;
-  //for(var key in nodes){
-  //  if(nodes[key].style && nodes[key].style){
-  //    nodes[key].style.width = this.fontWidth + "px";
-  //    nodes[key].style.height = this.fontHeight + "px";
-  //  }
-  //}
+  }, 1000);
 };
 
 Title.prototype._getPerfectPosition = function(){
   var letterCount = this.rawTitle.length;
 
   if(parseInt(this.containerWidth / letterCount) >= 20){
-    this.fontWidth = parseInt(this.containerWidth / letterCount);
-    this.fontHeight = parseInt(this.containerHeight);
+    this.fontRuler = parseInt(this.containerWidth / letterCount) > parseInt(this.containerHeight) ?
+      parseInt(this.containerHeight) : parseInt(this.containerWidth / letterCount);
     this.letterPerLine = letterCount;
   }
   else{
     this.letterPerLine = parseInt(this.containerWidth / 20);
     this.lineCount = Math.ceil(letterCount / this.letterPerLine);
-    this.fontWidth = parseInt(this.containerWidth / letterCount);
-    this.fontHeigth = parseInt(this.containerHeight / this.lineCount);
+    this.fontRuler = parseInt(this.containerWidth / letterCount) > parseInt(this.containerHeight / this.lineCount) ?
+      parseInt(this.containerHeight / this.lineCount) : parseInt(this.containerWidth / letterCount);
   }
-  this.fontSize = this.fontSize || (this.fontWidth > this.fontHeight ? this.fontHeight : this.fontWidth) + 10;
+};
+
+Title.prototype._createHoveCSS = function(){
+  var head = document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  var declarations = document.createTextNode('div:hover {border-width: 10px;}');
+
+  style.type = 'text/css';
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = declarations.nodeValue;
+  } else {
+    style.appendChild(declarations);
+  }
+
+  head.appendChild(style);
 };
