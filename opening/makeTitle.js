@@ -16,7 +16,7 @@ var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
 };
 
 Title.prototype._hoverHandler = function(oEvent){
-  oEvent.currentTarget.style["-webkit-transform"] = "translateZ(50px)";
+  oEvent.currentTarget.style["-webkit-transform"] = "scale(1.5)";
 };
 
 Title.prototype._mouseoutHandler = function(oEvent){
