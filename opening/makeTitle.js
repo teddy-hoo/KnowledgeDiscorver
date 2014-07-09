@@ -16,11 +16,13 @@ var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
 };
 
 Title.prototype._hoverHandler = function(oEvent){
-  oEvent.currentTarget.style["-webkit-transform"] = "scale(1.5)";
+  oEvent.currentTarget.style["-webkit-transform"] = "scale(1.5) rotateY(360deg)";
+  oEvent.currentTarget.style["z-index"] = 1000;
 };
 
 Title.prototype._mouseoutHandler = function(oEvent){
   oEvent.currentTarget.style["-webkit-transform"] = "";
+  oEvent.currentTarget.style["z-index"] = 1;
 };
 
 Title.prototype.setSelection = function(selection){
