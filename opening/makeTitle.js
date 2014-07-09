@@ -1,6 +1,6 @@
 var fontColor = ["#00FA9A", "#0000FF", "#FF1493", "#808080", "#FF0000", "#00FF00", "#FFD700", "#00FFFF"];
 
-var Title = function(rawTitle, selection, fontColors, width, height, fontsize){
+var Title = function(rawTitle, selection, width, height, fontsize, fontColors){
   this.rawTitle = rawTitle.split("");
   this.selection = selection;
   this.container = null;
