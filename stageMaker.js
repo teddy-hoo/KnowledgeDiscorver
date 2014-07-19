@@ -30,30 +30,30 @@ Stage.prototype._createStage = function(){
 
 Stage.prototype._enableAnimation = function(){
 	this.stageDiv.style["-webkit-transition"] = this._animationDura / 1000 + "s ease-in-out ";
-	// this.stageDiv.addEventListener("mouseover", this._hoverHandler);
- //    this.stageDiv.addEventListener("mouseout", this._hoverHandler);
+	this.stageDiv.addEventListener("mouseover", this._hoverHandler);
+	this.stageDiv.addEventListener("mouseout", this._hoverHandler);
 };
 
-// Stage.prototype._hoverHandler = function(oEvent){
-// 	var reg = /scale(*)/;
-// 	var trans = oEvent.currentTarget.style["-webkit-transform"];
-// 	if(oEvent.type === "mouseover"){
-// 		if(trans.match(reg) !== ""){
-// 			trans.replace(reg, "scale(1.1)");
-// 		}
-// 		else{
-// 			trans += "scale(1.1)";
-// 		}
-// 	}
-// 	else if(oEvent.type === "mouseout"){
-// 		if(trans.match(reg) !== ""){
-// 			trans.replace(reg, "scale(1)");
-// 		}
-// 		else{
-// 			trans += "scale(1)";
-// 		}
-// 	}
-// };
+					Stage.prototype._hoverHandler = function(oEvent){
+					var reg = /scale(*)/;
+						var trans = oEvent.currentTarget.style["-webkit-transform"];
+					if(oEvent.type === "mouseover"){
+							if(trans.match(reg) !== ""){
+								trans.replace(reg, "scale(1.1)");
+							}
+							else{
+								trans += "scale(1.1)";
+							}
+						}
+						else if(oEvent.type === "mouseout"){
+							if(trans.match(reg) !== ""){
+								trans.replace(reg, "scale(1)");
+							}
+							else{
+								trans += "scale(1)";
+							}
+						}
+					};
 
 Stage.prototype.slide = function(){
 	that = this;
